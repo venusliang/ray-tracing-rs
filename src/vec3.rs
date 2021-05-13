@@ -9,29 +9,25 @@ pub type Point3 = Vec3;
 #[allow(dead_code)]
 pub type Color = Vec3;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Default)]
 pub struct Vec3 {
     pub e: [f64; 3],
 }
 
 impl Vec3 {
     #[allow(dead_code)]
-    pub fn empty() -> Vec3 {
-        Vec3 { e: [0.0; 3] }
+    pub fn new(e0: f64, e1: f64, e2: f64) -> Self {
+        Self { e: [e0, e1, e2] }
     }
 
-    pub fn new(e0: f64, e1: f64, e2: f64) -> Vec3 {
-        Vec3 { e: [e0, e1, e2] }
-    }
-
-    pub fn random() -> Vec3 {
-        Vec3 {
+    pub fn random() -> Self {
+        Self {
             e: [random_f64(), random_f64(), random_f64()],
         }
     }
 
-    pub fn random_range(min: f64, max: f64) -> Vec3 {
-        Vec3 {
+    pub fn random_range(min: f64, max: f64) -> Self {
+        Self {
             e: [
                 random_range_f64(min, max),
                 random_range_f64(min, max),
@@ -58,6 +54,11 @@ impl Vec3 {
 
     pub fn length(&self) -> f64 {
         self.length_squared().sqrt()
+    }
+
+    pub fn near_zero(&self) -> bool {
+        let s = 1e-8;
+        self.e[0].abs() < s && self.e[1].abs() < s && self.e[2].abs() < s
     }
 }
 
@@ -227,4 +228,23 @@ pub fn random_in_unit_sphere() -> Vec3 {
         }
         return p;
     }
+}
+
+#[allow(dead_code)]
+pub fn random_unit_vector() -> Vec3 {
+    unit_vector(random_in_unit_sphere())
+}
+
+#[allow(dead_code)]
+pub fn random_in_hemisphere(normal: &Vec3) -> Vec3 {
+    let in_unit_sphere = random_in_unit_sphere();
+    if dot(&in_unit_sphere, normal) > 0.0 {
+        return in_unit_sphere;
+    } else {
+        return -in_unit_sphere;
+    }
+}
+
+pub fn reflect(v: Vec3, n: Vec3) -> Vec3 {
+    v - 2.0 * dot(&v, &n) * n
 }
