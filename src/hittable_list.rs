@@ -30,10 +30,10 @@ impl Hittable for HittableList {
         for object in &self.objects {
             if object.hit(r, t_min, closest_so_far, &mut temp_rec) {
                 hit_anything = true;
-                let tt = temp_rec.clone();
+                let tc = temp_rec.clone();
                 closest_so_far = temp_rec.t;
 
-                *rec = tt;
+                *rec = tc;
             }
         }
 
