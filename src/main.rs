@@ -1,3 +1,7 @@
+use std::sync::Arc;
+use std::{env, fs::File};
+use std::{io::Write, path::Path};
+
 mod camera;
 mod color;
 mod hittable;
@@ -16,7 +20,6 @@ use material::*;
 use ray::*;
 use rtweekend::*;
 use sphere::*;
-use std::sync::Arc;
 use vec3::*;
 
 fn ray_color<T: Hittable>(r: Ray, world: &T, depth: i64) -> Color {
@@ -110,7 +113,27 @@ fn random_scene() -> HittableList {
     world
 }
 
+fn create_file_stream() -> File {
+    let args: Vec<String> = env::args().collect();
+
+    let filepath = &args[1];
+
+    let path = Path::new(filepath);
+
+    let file = match File::create(&path) {
+        Err(why) => panic!("无法创建文件, err:{}", why.to_string()),
+        Ok(file) => file,
+    };
+
+    // file.write_fmt(fmt)
+    // write!(&mut file, "P3\n{} {}\n255", 123, 123).unwrap();
+
+    file
+}
+
 fn main() {
+    let mut file = create_file_stream();
+
     // Image
     const ASPECT_RATIO: f64 = 3.0 / 2.0;
     const IMAGE_WIDTH: i64 = 1200;
@@ -138,7 +161,7 @@ fn main() {
     );
 
     // Render
-    println!("P3\n{} {}\n255", IMAGE_WIDTH, IMAGE_HEIGHT);
+    write!(&mut file, "P3\n{} {}\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT).unwrap();
 
     let mut j = IMAGE_HEIGHT - 1;
     while j >= 0 {
@@ -150,7 +173,7 @@ fn main() {
                 let r = cam.get_ray(u, v);
                 pixel_color += ray_color(r, &world, MAX_DEPTH)
             }
-            write_color(pixel_color, SAMPLES_PER_PIXEL);
+            write_color(&mut file, pixel_color, SAMPLES_PER_PIXEL);
         }
 
         j -= 1

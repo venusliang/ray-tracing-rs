@@ -3,10 +3,8 @@ use std::ops::*;
 
 use crate::rtweekend::*;
 
-#[allow(dead_code)]
 pub type Point3 = Vec3;
 
-#[allow(dead_code)]
 pub type Color = Vec3;
 
 #[derive(Clone, Copy, Default)]
@@ -15,7 +13,6 @@ pub struct Vec3 {
 }
 
 impl Vec3 {
-    #[allow(dead_code)]
     pub fn new(e0: f64, e1: f64, e2: f64) -> Self {
         Self { e: [e0, e1, e2] }
     }
@@ -206,7 +203,6 @@ pub fn dot(u: Vec3, v: Vec3) -> f64 {
     u.e[0] * v.e[0] + u.e[1] * v.e[1] + u.e[2] * v.e[2]
 }
 
-#[allow(dead_code)]
 pub fn cross(u: &Vec3, v: &Vec3) -> Vec3 {
     Vec3::new(
         u.e[1] * v.e[2] - u.e[2] * v.e[1],
@@ -230,7 +226,6 @@ pub fn random_in_unit_sphere() -> Vec3 {
     }
 }
 
-#[allow(dead_code)]
 pub fn random_unit_vector() -> Vec3 {
     unit_vector(random_in_unit_sphere())
 }
