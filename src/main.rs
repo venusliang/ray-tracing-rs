@@ -7,6 +7,7 @@ mod color;
 mod hittable;
 mod hittable_list;
 mod material;
+mod moving_sphere;
 mod ray;
 mod rtweekend;
 mod sphere;
@@ -17,6 +18,7 @@ use color::*;
 use hittable::*;
 use hittable_list::*;
 use material::*;
+use moving_sphere::*;
 use ray::*;
 use rtweekend::*;
 use sphere::*;
@@ -74,7 +76,15 @@ fn random_scene() -> HittableList {
                     // diffuse
                     let albedo = Color::random() * Color::random();
                     sphere_material = Arc::new(Lambertian::new(albedo));
-                    world.add(Arc::new(Sphere::new(center, 0.2, sphere_material)));
+                    let center2 = center + Vec3::new(0.0, random_range_f64(0.0, 0.5), 0.0);
+                    world.add(Arc::new(MovingSphere::new(
+                        center,
+                        center2,
+                        0.0,
+                        1.0,
+                        0.2,
+                        sphere_material,
+                    )));
                 } else if choose_mat < 0.95 {
                     // fuzz
                     let albedo = Color::random_range(0.5, 1.0);
@@ -135,10 +145,10 @@ fn main() {
     let mut file = create_file_stream();
 
     // Image
-    const ASPECT_RATIO: f64 = 3.0 / 2.0;
-    const IMAGE_WIDTH: i64 = 1200;
+    const ASPECT_RATIO: f64 = 16.0 / 9.0;
+    const IMAGE_WIDTH: i64 = 400;
     const IMAGE_HEIGHT: i64 = (IMAGE_WIDTH as f64 / ASPECT_RATIO) as i64;
-    const SAMPLES_PER_PIXEL: i64 = 500;
+    const SAMPLES_PER_PIXEL: i64 = 100;
     const MAX_DEPTH: i64 = 50;
 
     // world
@@ -146,7 +156,7 @@ fn main() {
 
     // camera
     let lookfrom = Point3::new(13.0, 2.0, 3.0);
-    let lookat = Point3::new(0.0, 0.0, -0.0);
+    let lookat = Point3::new(0.0, 0.0, 0.0);
     let vup = Vec3::new(0.0, 1.0, 0.0);
     let dist_to_focus = 10.0;
     let aperture = 0.1;
@@ -158,6 +168,8 @@ fn main() {
         ASPECT_RATIO,
         aperture,
         dist_to_focus,
+        0.0,
+        1.0,
     );
 
     // Render
