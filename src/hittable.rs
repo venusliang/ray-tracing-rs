@@ -1,3 +1,5 @@
+use crate::aabb::Aabb;
+
 use super::material::*;
 use super::ray::*;
 use super::vec3::*;
@@ -38,4 +40,5 @@ impl Default for HitRecord {
 
 pub trait Hittable {
     fn hit(&self, r: Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool;
+    fn bounding_box(&self, time0: f64, time1: f64, output_box: &mut Aabb) -> bool;
 }

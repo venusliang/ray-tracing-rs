@@ -17,9 +17,9 @@ pub fn write_color(stream: &mut impl Write, pixel_color: Color, samples_per_pixe
     write!(
         stream,
         "{} {} {}\n",
-        (256 as f64 * clamp(r, 0.0, 0.999)) as i64,
-        (256 as f64 * clamp(g, 0.0, 0.999)) as i64,
-        (256 as f64 * clamp(b, 0.0, 0.999)) as i64
+        (256.0 * clamp(r, 0.0, 0.999)) as i64,
+        (256.0 * clamp(g, 0.0, 0.999)) as i64,
+        (256.0 * clamp(b, 0.0, 0.999)) as i64
     )
     .unwrap();
 }

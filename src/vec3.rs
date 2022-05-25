@@ -180,7 +180,7 @@ impl MulAssign<f64> for Vec3 {
 impl Div<f64> for Vec3 {
     type Output = Vec3;
     fn div(self, rhs: f64) -> Self::Output {
-        self * (1 as f64 / rhs)
+        self * (1.0 / rhs)
     }
 }
 
@@ -234,9 +234,9 @@ pub fn random_unit_vector() -> Vec3 {
 pub fn random_in_hemisphere(normal: &Vec3) -> Vec3 {
     let in_unit_sphere = random_in_unit_sphere();
     if dot(in_unit_sphere, *normal) > 0.0 {
-        return in_unit_sphere;
+        in_unit_sphere
     } else {
-        return -in_unit_sphere;
+        -in_unit_sphere
     }
 }
 

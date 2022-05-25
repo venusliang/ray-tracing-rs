@@ -12,6 +12,8 @@ mod ray;
 mod rtweekend;
 mod sphere;
 mod vec3;
+mod aabb;
+mod bvh;
 
 use camera::*;
 use color::*;

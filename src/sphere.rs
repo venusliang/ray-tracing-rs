@@ -3,6 +3,7 @@ use std::sync::Arc;
 use super::hittable::*;
 use super::ray::*;
 use super::vec3::*;
+use crate::aabb::*;
 use crate::material::Material;
 
 #[derive(Clone)]
@@ -51,6 +52,15 @@ impl Hittable for Sphere {
         let outward_normal = (rec.p - self.center) / self.radius;
         rec.set_face_normal(&r, outward_normal);
         rec.mat_ptr = self.mat_ptr.clone();
+        true
+    }
+
+    fn bounding_box(&self, time0: f64, time1: f64, output_box: &mut Aabb) -> bool {
+        *output_box = Aabb::new(
+            self.center - Vec3::new(self.radius, self.radius, self.radius),
+            self.center + Vec3::new(self.radius, self.radius, self.radius),
+        );
+
         true
     }
 }
